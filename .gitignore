@@ -1,0 +1,7 @@
+*.o
+*.out
+*.elf
+*.exe
+gtk_app
+gtk_app_erweiterung
+x11_draw
