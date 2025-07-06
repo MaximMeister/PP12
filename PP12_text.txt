@@ -1,0 +1,64 @@
+Once the language used for the university homework has been clarified, the following questions are intended as practice.
+
+Task 1:
+
+What steps are required to open an X11 window and receive events?
+
+Therefore are several steps required. First we must initiate a connection to the x-server. 
+
+Display *dpy = XOpenDisplay(NULL); 
+
+NULL means that the default value of the environment variable $Display should be used.
+
+Next the actual window is created wirh the following code:
+
+Window win = XCreateSimpleWindow(
+    dpy, RootWindow(dpy, screen),
+    10, 10, 400, 300, 1,
+    BlackPixel(dpy, screen),
+    WhitePixel(dpy, screen)
+);
+
+dpy ist the connection to x. The numbers are for the size and position of the window.
+
+The string "XSelectInput(dpy, win, ExposureMask | KeyPressMask);" explains the x-server
+in which event cases we want to receive a return massage.
+
+The following line "XMapWindow(dpy, win);" makes
+the window visible on the screen. 
+
+The next passage sets the settings for the colour:
+
+GC gc = XCreateGC(dpy, win, 0, NULL);
+XSetForeground(dpy, gc, BlackPixel(dpy, screen));
+
+In the next code block, a for-loop is initialized.
+
+    for(;;) {
+        XEvent e;
+        XNextEvent(dpy, &e);
+        if (e.type == Expose) {
+            // Draw a rectangle
+            XDrawRectangle(dpy, win, gc, 50, 50, 200, 100);
+        }
+        if (e.type == KeyPress)
+            break;
+    }
+
+XNextEvent () waits until a event ist triggered (Expose: drawing the rectangle, Keypress ending the loop) 
+
+
+How does the Expose event trigger your drawing code?
+
+The following actions trigger the expose event:
+- The first turn up/ generating the window
+- Minimize and then open the window again
+- Drag the window via mouse on the screen
+- Blocking the window with an other programm and closing the programm after that.
+
+
+Task 2:
+
+How does GTK’s signal-and-callback mechanism differ from X11’s event loop?
+
+Why use pkg-config when compiling GTK applications?
